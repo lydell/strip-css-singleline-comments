@@ -21,7 +21,8 @@
     "trim",
     "preprocess",
     "transform",
-    "strip-css-comments"
+    "strip-css-comments",
+    "gulpfriendly"
   ],
   "scripts": {
     "bench": "gulp bench",
