@@ -1,0 +1,36 @@
+p {
+  font: 16px/1.2 sans-serif;
+  --custom-prop: /'a//' /"b//";
+  --escapes: '\'//'     "\"//"
+             '\\\'//'   "\\\"//"
+             '\\\\\'//' "\\\\\"//"
+             '\\'
+             "\\"
+             '\\\\'
+             "\\\\"
+             '\a'
+             "\a"
+             ;
+  
+  
+  --multiliners: '1
+                  2\
+                  3 //
+                  4'
+                 "1
+                  2\
+                  3 //
+                  4"
+                  ;
+  --block-comment: '/**/' "/**/";
+}
+
+
+
+
+
+
+/*/ Tricky block // /* comment /*/
+/* Block comment containg 'string' and // comment */
+
+

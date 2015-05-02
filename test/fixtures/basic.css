@@ -1,0 +1,24 @@
+/**
+ * OOCSS-style Media block
+ */
+.media {
+// TODO
+}
+
+.media > .mediaImg {
+  float: left; // TODO add clearfix
+  // margin-right: 1em;
+  margin-right: 10px; // Use pixels for now
+}
+
+
+/**
+ * Brand image as background
+ *
+ * Note: Uses protocol-relative url (`//example.com`).
+ */
+.brand-bg {
+  background: url('//example.com/brand-bg.png') no-repeat center
+}
+
+// vim: filetype=scss

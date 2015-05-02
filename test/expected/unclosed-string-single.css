@@ -1,0 +1,10 @@
+
+
+a::after {
+  content: 'String
+            that was;
+}
+
+mistakenly {
+  unclosed: true; // yes it was
+}

@@ -1,0 +1,17 @@
+#!/usr/bin/env node
+// Copyright 2015 Simon Lydell
+// X11 (“MIT”) Licensed. (See LICENSE.)
+
+if (process.argv.length > 2) {
+  var pkg = require("./package.json")
+  process.stdout.write([
+    "Usage: " + pkg.bin + " <input.css >output.css",
+    "",
+    pkg.description,
+    "Reads from stdin and writes to stdout.",
+    "Version: " + pkg.version
+  ].join("\n") + "\n")
+  process.exit()
+}
+
+process.stdin.pipe(require("./")()).pipe(process.stdout)

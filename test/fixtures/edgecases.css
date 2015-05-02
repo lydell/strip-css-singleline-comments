@@ -1,0 +1,36 @@
+p {
+  font: 16px/1.2 sans-serif;
+  --custom-prop: /'a//' /"b//";
+  --escapes: '\'//'     "\"//"
+             '\\\'//'   "\\\"//"
+             '\\\\\'//' "\\\\\"//"
+             '\\'//'
+             "\\"//"
+             '\\\\'//'
+             "\\\\"//"
+             '\a'//'
+             "\a"//"
+             ;
+  // CSS strings cannot contain (unescaped) newlines, but we allow that anyway,
+  // since postcss does.
+  --multiliners: '1
+                  2\
+                  3 //
+                  4'
+                 "1
+                  2\
+                  3 //
+                  4"
+                  ;
+  --block-comment: '/**/' "/**/";
+}
+
+// Comment containg 'string' and /* block comment */
+// Comment containg unclosed 'string and /* block comment
+// Comment containg // comment
+//// Multiple leading slashes
+//* Not a block comment */
+/*/ Tricky block // /* comment /*/
+/* Block comment containg 'string' and // comment */
+
+// vim: filetype=scss

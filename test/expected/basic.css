@@ -1,0 +1,24 @@
+/**
+ * OOCSS-style Media block
+ */
+.media {
+
+}
+
+.media > .mediaImg {
+  float: left; 
+  
+  margin-right: 10px; 
+}
+
+
+/**
+ * Brand image as background
+ *
+ * Note: Uses protocol-relative url (`//example.com`).
+ */
+.brand-bg {
+  background: url('//example.com/brand-bg.png') no-repeat center
+}
+
+
