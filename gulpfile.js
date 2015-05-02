@@ -31,11 +31,12 @@ gulp.task("css", function() {
 
 // Test chunks ending with slashes.
 gulp.task("chunks", function(callback) {
-  var expected = "font: 16px/1.2 sans-serif; "
+  var expected = "font: 16px/1.2 sans-serif; \r/"
   var stream = strip()
   stream.write("font: 16px/")
   stream.write("1.2 sans-serif; /")
-  stream.write("/ comment")
+  stream.write("/ comment\r")
+  stream.write("/")
   stream.pipe(concatStream({encoding: "string"}, function(actual) {
     if (actual === expected) {
       callback()

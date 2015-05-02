@@ -101,5 +101,11 @@ module.exports = function stripCssSinglelineComments() {
     }
 
     callback()
+  }, function(callback) {
+    // The very last chunk ended with a single slash, which never was outputted.
+    if (state !== S_SINGLELINE_COMMENT && lastCh === C_SLASH) {
+      this.push(new Buffer([C_SLASH]))
+    }
+    callback()
   })
 }
