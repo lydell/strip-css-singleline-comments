@@ -19,92 +19,110 @@ var S_BLOCK_COMMENT      = 2
 var S_SINGLELINE_COMMENT = 3
 
 module.exports = function stripCssSinglelineComments() {
-  var state   = S_NORMAL
+  var state = S_NORMAL
   var quote
-  var escaped = false
-  var lastCh  = 0
+  var ch    = -1
+  var index = 0
 
   return through(function(chunk, encoding, callback) {
-    var index
-    var ch
-    var start  = 0 // The position in the chunk to start outputting from.
-    var length = chunk.length
+    var start = 0 // The position in the chunk to start outputting from.
+    var last  = chunk.length - 1
 
-    for (index = 0; index < length; index++) {
+    if (ch < 0) {
       ch = chunk[index]
+    }
 
+    forloop: for (; index <= last; index++, ch = chunk[index]) {
       switch (state) {
         case S_NORMAL:
-          if (lastCh === C_SLASH) {
-              if (ch === C_SLASH) {
+          if (ch === C_SLASH) {
+              if (index === last) {
+                // Lookahead required but not available; wait for next chunk.
+                break forloop
+              }
+              if (chunk[index + 1] === C_SLASH) {
                 state = S_SINGLELINE_COMMENT
                 // Output everything from the start of the chunk or the last
                 // singleline comment to the comment we are just entering,
                 // unless that range is the empty string.
-                if (index - 1 > start) {
-                  this.push(chunk.slice(start, index - 1))
+                if (index > start) {
+                  this.push(chunk.slice(start, index))
                 }
-                break
+                // Consume next char.
+                index++
               } else {
-                if (index === 0) {
-                  // The last chunk ended with a single slash, which never was
-                  // outputted.
-                  this.push(new Buffer([C_SLASH]))
+                if (index < 0) {
+                  // Last char from last chunk buffered. Now we may output it.
+                  this.push(new Buffer([ch]))
                 }
-                if (ch === C_ASTERISK) {
+                if (chunk[index + 1] === C_ASTERISK) {
                   state = S_BLOCK_COMMENT
-                  // Prevent `lastCh` from becoming `C_ASTERISK` in order not to
-                  // parse `/*/` as a complete block comment.
-                  ch = 0
-                  break
+                  // Consume next char.
+                  index++
                 }
               }
-          }
-          if (ch === C_APOS || ch === C_QUOT) {
+          } else if (ch === C_APOS || ch === C_QUOT) {
             state = S_STRING
             quote = ch
           }
           break
 
         case S_STRING:
-          if (escaped) {
-            escaped = false
-          } else if (ch === C_BACKSLASH) {
-            escaped = true
+          if (ch === C_BACKSLASH) {
+            // Consume next char.
+            index++
           } else if (ch === quote) {
             state = S_NORMAL
           }
           break
 
         case S_BLOCK_COMMENT:
-          if (lastCh === C_ASTERISK && ch === C_SLASH) {
-            state = S_NORMAL
+          if (ch === C_ASTERISK) {
+            if (index === last) {
+              // Lookahead required but not available; wait for next chunk.
+              break forloop
+            }
+            if (index < 0) {
+              // Last char from last chunk buffered. Now we may output it.
+              this.push(new Buffer([ch]))
+            }
+            if (chunk[index + 1] === C_SLASH) {
+              state = S_NORMAL
+              // Consume next char.
+              index++
+            }
           }
           break
 
         case S_SINGLELINE_COMMENT:
           if (ch === C_CR || ch === C_LF) {
             state = S_NORMAL
+            start = index
           }
-          start = index
           break
       }
-
-      lastCh = ch
     }
 
-    if (state !== S_SINGLELINE_COMMENT) {
-      // If the chunk ends with a single slash we cannot output it right now,
-      // because we don’t know yet if it is part of a `//` comment or something
-      // else.
-      this.push(chunk.slice(start, length - (lastCh === C_SLASH ? 1 : 0)))
+    // Make the index usable by the next chunk.
+    index -= last + 1
+    if (index < 0) {
+      // Buffer the last char and let the next iteration insert it if
+      // appropriate.
+      this.push(chunk.slice(start, -1))
+    } else {
+      // Don’t buffer last char.
+      ch = -1
+      if (state !== S_SINGLELINE_COMMENT) {
+        // Output the rest of the chunk, unless we’re in a comment.
+        this.push(chunk.slice(start))
+      }
     }
 
     callback()
   }, function(callback) {
-    // The very last chunk ended with a single slash, which never was outputted.
-    if (state !== S_SINGLELINE_COMMENT && lastCh === C_SLASH) {
-      this.push(new Buffer([C_SLASH]))
+    if (ch !== -1) {
+      // If there’s a buffered char left, output it.
+      this.push(new Buffer([ch]))
     }
     callback()
   })

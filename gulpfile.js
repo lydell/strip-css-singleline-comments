@@ -29,14 +29,13 @@ gulp.task("css", function() {
 
 // The rest of the file is only used for testing.
 
-// Test chunks ending with slashes.
+// Test chunks with inconvenient breaks.
 gulp.task("chunks", function(callback) {
-  var expected = "font: 16px/1.2 sans-serif; \r/"
+  var parts = "font: 16px/|1.2 'Apo\\|'s font'/|*Tahoma*|/; /|/X|X\r|/"
+              .split("|")
+  var expected = parts.join('').replace(/\/\/X+/g, '')
   var stream = strip()
-  stream.write("font: 16px/")
-  stream.write("1.2 sans-serif; /")
-  stream.write("/ comment\r")
-  stream.write("/")
+  parts.forEach(function(chunk) { stream.write(chunk) })
   stream.pipe(concatStream({encoding: "string"}, function(actual) {
     if (actual === expected) {
       callback()
