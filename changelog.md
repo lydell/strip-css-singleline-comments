@@ -1,3 +1,8 @@
+### Version 1.1.0 (2015-05-06) ###
+
+- Added: Sync interface.
+
+
 ### Version 1.0.2 (2015-05-06) ###
 
 - Improved: Simplified parser.
