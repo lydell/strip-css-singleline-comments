@@ -23,6 +23,7 @@ p {
                   4"
                   ;
   --block-comment: '/**/' "/**/";
+  --unicode: Iñtërnâtiônàlizætiøn☃💩 // The last character is Pile of poo.
 }
 
 // Comment containg 'string' and /* block comment */
