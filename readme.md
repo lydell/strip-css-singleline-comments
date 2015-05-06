@@ -63,6 +63,7 @@ Installation
 
 ```js
 var strip = require("strip-css-singleline-comments")
+var stripSync = require("strip-css-singleline-comments/sync")
 ```
 
 
@@ -75,9 +76,9 @@ General
 ```js
 var strip = require("strip-css-singleline-comments")
 
-fs.createReadStream('input.css')
+fs.createReadStream("input.css")
   .pipe(strip())
-  .pipe(fs.createWriteStream('output.css'))
+  .pipe(fs.createWriteStream("output.css"))
 ```
 
 The above is a bit like:
@@ -93,6 +94,14 @@ It is intended to be used with CSS, but can be used with anything where you want
 to remove `//`-style comments and it makes sense to make the above exclusions.
 
 `strip()` returns a [`through2@1`] stream.
+
+There’s also a sync interface:
+
+```js
+var stripSync = require("strip-css-singleline-comments/sync")
+
+stripSync(fs.readFileSync("output.css"))
+```
 
 [`through2@1`]: https://www.npmjs.com/package/through2
 

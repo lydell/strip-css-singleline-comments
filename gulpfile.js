@@ -9,6 +9,7 @@ var concatStream = require("concat-stream")
 var concat       = require("gulp-concat")
 var bench        = require("gulp-bench")
 var strip        = require("./")
+var stripSync    = require("./sync")
 
 // This task is both a usage example and used for testing.
 gulp.task("css", function() {
@@ -23,6 +24,20 @@ gulp.task("css", function() {
     // … or you may pipe it to more plugins. Many do not support streams, so you
     // might need `gulp-buffer`.
     .pipe(toBuffer())
+    .pipe(diff("test/expected"))
+    .pipe(diff.reporter({fail: true}))
+})
+
+// This task is both a usage example and used for testing.
+gulp.task("css-sync", function() {
+  return gulp.src("test/fixtures/*")
+    // No need for a specific gulp plugin! Just use `gulp-tap`.
+    .pipe(tap(function(file) {
+      file.contents = new Buffer(stripSync(file.contents))
+    }))
+    // You may pipe the stripped contents directly to a destination …
+    // .pipe(gulp.dest("dest"))
+    // … or you may pipe it to more plugins.
     .pipe(diff("test/expected"))
     .pipe(diff.reporter({fail: true}))
 })
@@ -49,7 +64,7 @@ gulp.task("chunks", function(callback) {
   stream.end()
 })
 
-gulp.task("test", ["css", "chunks"])
+gulp.task("test", ["css", "css-sync", "chunks"])
 
 gulp.task("bench-prepare", function() {
   return gulp.src("node_modules/bootstrap/less/**/*.less")

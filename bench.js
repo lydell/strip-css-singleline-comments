@@ -4,6 +4,7 @@
 var fs          = require("fs")
 var stripBlock  = require("strip-css-comments")
 var stripSingle = require("./")
+var stripSync   = require("./sync")
 
 var bootstrapFile   = "bootstrap.all.less"
 var bootstrapStream = fs.createReadStream(bootstrapFile)
@@ -20,6 +21,12 @@ module.exports = {
         bootstrapStream
           .pipe(stripSingle())
           .end(deferred.resolve.bind(deferred))
+      }
+    },
+    {
+      name: "strip-css-singleline-comments-sync",
+      fn: function() {
+        stripSync(bootstrapString)
       }
     },
     {

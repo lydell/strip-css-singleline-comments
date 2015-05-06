@@ -18,13 +18,14 @@ var S_STRING             = 1
 var S_BLOCK_COMMENT      = 2
 var S_SINGLELINE_COMMENT = 3
 
-module.exports = function stripCssSinglelineComments() {
+module.exports = function stripCssSinglelineComments(fn) {
+  fn = fn || through
   var state = S_NORMAL
   var quote
   var ch    = -1
   var index = 0
 
-  return through(function(chunk, encoding, callback) {
+  return fn(function(chunk, encoding, callback) {
     var start = 0 // The position in the chunk to start outputting from.
     var last  = chunk.length - 1
 
