@@ -1,6 +1,6 @@
 {
   "name": "strip-css-singleline-comments",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "Simon Lydell",
   "license": "MIT",
   "description": "Adds support for singleline comments in CSS.",
