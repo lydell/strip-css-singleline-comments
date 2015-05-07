@@ -100,7 +100,7 @@ There’s also a sync interface:
 ```js
 var stripSync = require("strip-css-singleline-comments/sync")
 
-stripSync(fs.readFileSync("output.css"))
+stripSync(fs.readFileSync("input.css"))
 ```
 
 [`through2@1`]: https://www.npmjs.com/package/through2
@@ -109,7 +109,7 @@ Gulp
 ----
 
 For example usage with [gulp], please see the first task in
-[gulpfile.js][gulpfile.js].
+[gulpfile.js](gulpfile.js).
 
 [gulp]: http://gulpjs.com/
 
