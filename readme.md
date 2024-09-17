@@ -1,3 +1,8 @@
+Deprecated
+==========
+
+This module is not maintained, and does not support unquoted URLs like `url(https://example.com/image.png)`, for example.
+
 Overview [![Build Status](https://travis-ci.org/lydell/strip-css-singleline-comments.svg?branch=master)](https://travis-ci.org/lydell/strip-css-singleline-comments)
 ========
 
